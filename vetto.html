@@ -1,0 +1,291 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Bride Trivia Night</title>
+<style>
+/* Layout: one narrow phone column run from a shared phone. Teal base with hot-pink pops, sticker-style buttons, a gold crown for the winner. */
+:root {
+  --bg: #E6F6F4;
+  --surface: #FFFFFF;
+  --fg: #12302E;
+  --muted: #4F706D;
+  --line: #B7D9D4;
+  --accent: #0F766E;
+  --accent-deep: #0A5A54;
+  --accent-fg: #FFFFFF;
+  --pop: #D61F73;
+  --pop-fg: #FFFFFF;
+  --pop-soft: #FFE3F0;
+  --gold: #F2B33D;
+  --display: "Fraunces", Georgia, "Times New Roman", serif;
+  --body: "DM Sans", "Helvetica Neue", Arial, sans-serif;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0C1A1A; --surface: #132726; --fg: #E6F4F1; --muted: #9AB9B5; --line: #25423F;
+    --accent: #2DD4BF; --accent-deep: #14917F; --accent-fg: #04211E;
+    --pop: #FF7DB5; --pop-fg: #2A0A18; --pop-soft: #3A1A2B; --gold: #F7C65C; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0C1A1A; --surface: #132726; --fg: #E6F4F1; --muted: #9AB9B5; --line: #25423F;
+  --accent: #2DD4BF; --accent-deep: #14917F; --accent-fg: #04211E;
+  --pop: #FF7DB5; --pop-fg: #2A0A18; --pop-soft: #3A1A2B; --gold: #F7C65C; color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body {
+  background-color: var(--bg);
+  background-image: radial-gradient(var(--line) 1.5px, transparent 1.5px);
+  background-size: 22px 22px;
+  color: var(--fg); font-family: var(--body); font-size: 17px; line-height: 1.45;
+  padding-block: 24px 48px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+}
+main { max-width: 480px; margin: 0 auto; display: flex; flex-direction: column; gap: 18px; }
+h1, h2 { margin: 0; text-wrap: balance; }
+h1 { font-family: var(--display); font-size: 2.3rem; font-weight: 500; line-height: 1.12; letter-spacing: -0.01em; }
+h2 { font-family: var(--display); font-size: 1.6rem; font-weight: 700; line-height: 1.2; }
+p { margin: 0; }
+.eyebrow { align-self: flex-start; background: var(--pop); color: var(--pop-fg); font-size: 0.72rem; letter-spacing: 0.1em; text-transform: uppercase; font-weight: 600; padding: 4px 12px; border-radius: 999px; }
+.muted { color: var(--muted); }
+label { font-weight: 600; font-size: 0.9rem; }
+input[type="text"] {
+  width: 100%; font: inherit; color: var(--fg); background: var(--surface);
+  border: 2px solid var(--line); border-radius: 16px; padding: 13px 16px; margin-top: 6px;
+}
+input:focus-visible, button:focus-visible { outline: 3px solid var(--pop); outline-offset: 2px; }
+button { font: inherit; cursor: pointer; }
+.primary, .secondary { border-radius: 999px; padding: 14px 20px; font-weight: 600; width: 100%; font-size: 1.05rem; }
+.primary { background: var(--accent); color: var(--accent-fg); border: 0; box-shadow: 0 4px 0 var(--accent-deep); transition: transform 0.08s, box-shadow 0.08s; }
+.primary:active:not(:disabled) { transform: translateY(3px); box-shadow: 0 1px 0 var(--accent-deep); }
+.secondary { background: var(--surface); color: var(--fg); border: 2px solid var(--accent); }
+.primary:disabled, .secondary:disabled { opacity: 0.4; cursor: not-allowed; }
+.ghost { background: none; border: 0; color: var(--muted); text-decoration: underline; font-size: 0.9rem; padding: 8px; align-self: center; }
+.meta { display: flex; justify-content: space-between; font-size: 0.9rem; color: var(--muted); font-variant-numeric: tabular-nums; }
+.stack { display: flex; flex-direction: column; gap: 10px; }
+.addrow { display: flex; gap: 10px; align-items: flex-end; }
+.addrow > div { flex: 1; min-width: 0; }
+.addrow .secondary { width: auto; padding: 13px 20px; }
+.guest { background: var(--surface); border: 2px solid var(--line); border-radius: 18px; padding: 8px 8px 8px 16px; display: flex; justify-content: space-between; gap: 12px; align-items: center; min-width: 0; }
+.guest .nm { overflow-wrap: anywhere; min-width: 0; font-weight: 600; }
+.guest button { background: none; border: 0; color: var(--muted); padding: 8px 10px; font-size: 0.85rem; text-decoration: underline; }
+.tog { text-align: left; color: var(--fg); background: var(--surface); border: 2px solid var(--line); border-radius: 18px; padding: 12px 16px; display: flex; justify-content: space-between; gap: 12px; align-items: center; width: 100%; min-height: 56px; font-weight: 600; }
+.tog[aria-pressed="true"] { border-color: var(--pop); background: var(--pop-soft); }
+.tog .mark { font-weight: 700; color: var(--pop); }
+.tog .nm { overflow-wrap: anywhere; min-width: 0; }
+.lb { display: flex; flex-direction: column; gap: 8px; }
+.lb .r { display: grid; grid-template-columns: 2rem 1fr auto auto; gap: 8px; align-items: center; background: var(--surface); border: 2px solid var(--line); border-radius: 18px; padding: 12px 16px; font-variant-numeric: tabular-nums; }
+.lb .r.first { border-color: var(--pop); background: var(--pop-soft); }
+.lb .rank { font-weight: 700; color: var(--accent); }
+.lb .nm { overflow-wrap: anywhere; font-weight: 600; min-width: 0; }
+.lb .pt { font-weight: 700; }
+.lb .gain { font-size: 0.85rem; font-weight: 700; color: var(--pop); min-width: 1.6rem; text-align: right; }
+.finalhead { display: flex; flex-direction: column; align-items: center; gap: 10px; text-align: center; padding-top: 4px; }
+.finalhead .eyebrow { align-self: center; }
+.winner { font-family: var(--display); font-size: 2.6rem; font-weight: 600; line-height: 1.1; color: var(--pop); overflow-wrap: anywhere; }
+.crown svg { width: 96px; height: auto; display: block; animation: bob 1.8s ease-in-out infinite; }
+@keyframes bob { 0%, 100% { transform: translateY(0) rotate(-3deg); } 50% { transform: translateY(-6px) rotate(3deg); } }
+.confetti { position: fixed; inset: 0; pointer-events: none; overflow: hidden; z-index: 5; }
+.confetti i { position: absolute; top: -16px; width: 9px; height: 14px; border-radius: 2px; opacity: 0; animation: fall linear forwards; }
+.confetti i.c0 { background: var(--pop); }
+.confetti i.c1 { background: var(--accent); }
+.confetti i.c2 { background: var(--gold); }
+.confetti i.c3 { background: #FF9ACB; }
+@keyframes fall { 0% { transform: translateY(0) rotate(0); opacity: 1; } 100% { transform: translateY(105vh) rotate(720deg); opacity: 1; } }
+@media (prefers-reduced-motion: reduce) { .crown svg { animation: none; } .confetti { display: none; } .primary { transition: none; } }
+</style>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=DM+Sans:wght@400;500;600;700&display=swap">
+<style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}[hidden]{display:none!important}</style>
+</head>
+<body>
+<main id="app"></main>
+
+<script>
+const Q = [
+  "How did Louise and her fiancé meet?",
+  "Where was their first date?",
+  "Who said \"I love you\" first?",
+  "What is her go-to karaoke song?",
+  "Where does she most want to travel next?",
+  "What is her comfort food after a bad day?",
+  "What is her most-used app on her phone?",
+  "What is her biggest pet peeve?",
+  "What is her usual drink order?",
+  "What will make her cry first on the wedding day?",
+  "How many kids does she want?",
+  "What is one thing she can't live without?"
+];
+const KEY = "bride-trivia-solo-v4";
+const GUESTS = ["Katie", "Bernita", "Gini", "Jennifer", "Nina", "Sherry", "Suzy", "Terry", "Anna", "Alyna"];
+let S = { names: GUESTS.slice(), scores: Object.fromEntries(GUESTS.map(n => [n, 0])), phase: "setup", round: 0, nextQi: 0, qt: "", marked: [], gained: [] };
+try { const r = JSON.parse(localStorage.getItem(KEY) || "null"); if (r && typeof r === "object" && Array.isArray(r.names)) S = Object.assign(S, r); } catch (e) {}
+function save() { try { localStorage.setItem(KEY, JSON.stringify(S)); } catch (e) {} }
+
+let draftName = "", draftQ = "";
+const app = document.getElementById("app");
+
+function el(tag, attrs, ...kids) {
+  const n = document.createElement(tag);
+  for (const k in (attrs || {})) {
+    if (k === "class") n.className = attrs[k];
+    else if (k === "text") n.textContent = attrs[k];
+    else if (k.startsWith("on")) n.addEventListener(k.slice(2), attrs[k]);
+    else if (attrs[k] != null) n.setAttribute(k, attrs[k]);
+  }
+  kids.flat().forEach(c => c && n.append(c));
+  return n;
+}
+function go(fn) { fn(); save(); render(); }
+
+function standings() {
+  return S.names.map(n => [n, S.scores[n] || 0]).sort((a, b) => b[1] - a[1]);
+}
+function winners() {
+  const s = standings();
+  if (!s.length || s[0][1] === 0) return [];
+  return s.filter(x => x[1] === s[0][1]).map(x => x[0]);
+}
+function leaderboard(showGain) {
+  let rank = 0, prev = null;
+  return el("div", { class: "lb" }, standings().map(([n, p], i) => {
+    if (p !== prev) { rank = i + 1; prev = p; }
+    const gained = showGain && S.gained.includes(n);
+    return el("div", { class: "r" + (rank === 1 && p > 0 ? " first" : "") },
+      el("span", { class: "rank", text: String(rank) }),
+      el("span", { class: "nm", text: n }),
+      el("span", { class: "gain", text: gained ? "+1" : "" }),
+      el("span", { class: "pt", text: p + (p === 1 ? " pt" : " pts") }));
+  }));
+}
+function startRound(text) {
+  S.round += 1; S.qt = text; S.phase = "ask"; S.marked = []; S.gained = [];
+}
+function nextPreset() { startRound(Q[S.nextQi]); S.nextQi += 1; }
+
+function ownQuestion(buttonLabel) {
+  const input = el("input", { type: "text", id: "custom", maxlength: "140", placeholder: "Ask your own question" });
+  input.value = draftQ;
+  input.addEventListener("input", () => { draftQ = input.value; });
+  const ask = () => { const t = draftQ.trim(); if (!t) return; draftQ = ""; go(() => startRound(t)); };
+  input.addEventListener("keydown", e => { if (e.key === "Enter") ask(); });
+  return [
+    el("div", {}, el("label", { for: "custom", text: "Or ask one of your own" }), input),
+    el("button", { class: "secondary", text: buttonLabel, onclick: ask })
+  ];
+}
+
+function setup() {
+  const input = el("input", { type: "text", id: "guest", autocomplete: "off", maxlength: "30", placeholder: "First name" });
+  input.value = draftName;
+  input.addEventListener("input", () => { draftName = input.value; });
+  const add = () => {
+    const t = draftName.trim();
+    if (!t) return;
+    draftName = "";
+    if (!S.names.some(n => n.toLowerCase() === t.toLowerCase())) { S.names.push(t); S.scores[t] = 0; save(); }
+    render(); document.getElementById("guest").focus();
+  };
+  input.addEventListener("keydown", e => { if (e.key === "Enter") add(); });
+  return [
+    el("p", { class: "eyebrow", text: "Bachelorette dinner" }),
+    el("h1", { text: "How well do you know Louise?" }),
+    el("p", { class: "muted", text: "One phone runs the whole game. Each round, guests write down an answer on paper or a napkin. Louise then reads them and says who got it right. Whoever knows her best wins the crown." }),
+    S.names.length ? el("div", { class: "stack" }, S.names.map(n => el("div", { class: "guest" },
+      el("span", { class: "nm", text: n }),
+      el("button", { text: "Remove", onclick: () => go(() => { S.names = S.names.filter(x => x !== n); delete S.scores[n]; }) })))) : null,
+    el("button", { class: "primary", text: "Start game", disabled: S.names.length ? null : "true", onclick: () => go(nextPreset) }),
+    el("div", { class: "addrow" },
+      el("div", {}, el("label", { for: "guest", text: "Add a late guest" }), input),
+      el("button", { class: "secondary", text: "Add", onclick: add }))
+  ];
+}
+function ask() {
+  return [
+    el("div", { class: "meta" }, el("span", { text: "Round " + S.round }), el("span", { text: S.names.length + (S.names.length === 1 ? " guest" : " guests") })),
+    el("h2", { text: S.qt }),
+    el("p", { class: "muted", text: "Everyone writes down their answer. When all are in, Louise reads them out." }),
+    el("button", { class: "primary", text: "Everyone's answered", onclick: () => go(() => { S.phase = "mark"; S.marked = []; }) }),
+    S.nextQi < Q.length ? el("button", { class: "ghost", text: "Skip to a different question", onclick: () => go(() => { S.round -= 1; nextPreset(); }) }) : null
+  ];
+}
+function mark() {
+  return [
+    el("h2", { text: S.qt }),
+    el("p", { class: "muted", text: "Tap everyone Louise says got it right." }),
+    el("div", { class: "stack" }, S.names.map(n => {
+      const on = S.marked.includes(n);
+      return el("button", { class: "tog", "aria-pressed": String(on), onclick: () => go(() => {
+        S.marked = on ? S.marked.filter(x => x !== n) : S.marked.concat(n);
+      }) }, el("span", { class: "nm", text: n }), el("span", { class: "mark", text: on ? "Right" : "" }));
+    })),
+    el("button", { class: "primary", text: "Award points (" + S.marked.length + ")", onclick: () => go(() => {
+      S.marked.forEach(n => { S.scores[n] = (S.scores[n] || 0) + 1; });
+      S.gained = S.marked.slice(); S.phase = "scored";
+    }) })
+  ];
+}
+function scored() {
+  const last = S.nextQi >= Q.length;
+  return [
+    el("h2", { text: S.qt }),
+    el("p", { class: "eyebrow", text: "Standings" }),
+    leaderboard(true),
+    el("button", { class: "primary", text: last ? "Finish game" : "Next question", onclick: () => go(() => { if (last) S.phase = "final"; else nextPreset(); }) }),
+    ...ownQuestion("Ask this instead"),
+    el("button", { class: "ghost", text: "End game now", onclick: () => go(() => { S.phase = "final"; }) })
+  ];
+}
+const CROWN = '<svg viewBox="0 0 64 48" role="img" aria-label="Crown"><path d="M6 40 L2 12 L18 26 L32 6 L46 26 L62 12 L58 40 Z" fill="#F2B33D" stroke="#B9801A" stroke-width="2.5" stroke-linejoin="round"/><rect x="6" y="38" width="52" height="7" rx="3" fill="#F2B33D" stroke="#B9801A" stroke-width="2.5"/><circle cx="2" cy="12" r="4" fill="#D61F73"/><circle cx="32" cy="6" r="4.5" fill="#D61F73"/><circle cx="62" cy="12" r="4" fill="#D61F73"/><circle cx="32" cy="29" r="4" fill="#FFFFFF" stroke="#B9801A" stroke-width="1.5"/></svg>';
+function final() {
+  const w = winners();
+  const head = w.length
+    ? el("div", { class: "finalhead" },
+        (() => { const c = el("span", { class: "crown" }); c.innerHTML = CROWN; return c; })(),
+        el("p", { class: "eyebrow", text: "Knows Louise the best" }),
+        el("h1", { class: "winner", text: w.join(" & ") }),
+        el("p", { class: "muted", text: w.length > 1 ? "A tie at the top. You are all crowned." : "Crowned the ultimate Louise expert." }))
+    : el("div", { class: "finalhead" },
+        el("p", { class: "eyebrow", text: "Final scores" }),
+        el("h1", { class: "winner", text: "That's the game." }));
+  return [
+    head,
+    leaderboard(false),
+    el("button", { class: "secondary", text: "Play again with the same guests", onclick: () => go(() => {
+      S.names.forEach(n => { S.scores[n] = 0; }); S.phase = "ask"; S.round = 0; S.nextQi = 0; S.marked = []; S.gained = []; nextPreset();
+    }) }),
+    el("button", { class: "ghost", text: "Start over", onclick: () => go(() => {
+      S = { names: GUESTS.slice(), scores: Object.fromEntries(GUESTS.map(n => [n, 0])), phase: "setup", round: 0, nextQi: 0, qt: "", marked: [], gained: [] };
+    }) })
+  ];
+}
+let confettiTimer = null;
+function confetti() {
+  clearConfetti();
+  const box = el("div", { class: "confetti", "aria-hidden": "true" });
+  for (let i = 0; i < 44; i++) {
+    const p = el("i", { class: "c" + (i % 4) });
+    p.style.left = (Math.random() * 100) + "%";
+    p.style.animationDuration = (2.6 + Math.random() * 2.4) + "s";
+    p.style.animationDelay = (Math.random() * 1.2) + "s";
+    box.append(p);
+  }
+  document.body.append(box);
+  confettiTimer = setTimeout(clearConfetti, 7000);
+}
+function clearConfetti() {
+  clearTimeout(confettiTimer);
+  document.querySelectorAll(".confetti").forEach(n => n.remove());
+}
+function render() {
+  const kids = S.phase === "ask" ? ask() : S.phase === "mark" ? mark() : S.phase === "scored" ? scored() : S.phase === "final" ? final() : setup();
+  app.replaceChildren(...kids.filter(Boolean));
+  if (S.phase === "final" && winners().length) confetti(); else clearConfetti();
+  window.scrollTo(0, 0);
+}
+render();
+</script>
+</body>
+</html>
